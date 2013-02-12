@@ -20,7 +20,9 @@ Download NPAPI Plugin for chrome, Windows
 pywin32モジュールを使うので以下から「 **pywin32-216.win32-py2.6.exe** 」をダウンロードします。  
 [http://sourceforge.net/projects/pywin32/files/pywin32/Build216/](http://sourceforge.net/projects/pywin32/files/pywin32/Build216/)  
 
-上記3つを全てインストールすれば環境は整った…はずです。  
+上記3つを全てインストールすればNPAPIのコンパイル環境構築は終わりです。  
+もしエラーでpython.exeが～と表示された場合、python.exeにパスを通して下さい。  
+やり方は[http://www.pythonweb.jp/install/setup/index1.html](http://www.pythonweb.jp/install/setup/index1.html)に載っています。
 
 ちなみにnixysaとは純粋なC++コードをNPAPI用のコードに変換してくれるツールです。  
 この変換にpythonが使われています。  
@@ -53,22 +55,35 @@ nixysa-read-only(任意のフォルダ名)
 complex_src\examples\complex\complex.slnを開きます。  
 (「 **complex_src_without_nixysa.zip** 」をダウンロードした人はnixysa-read-only\examples\complex\complex.slnです）  
 
+最初にツール＞設定＞上級者用の設定をチェックします。(この方が分かりやすいと思います。)  
+
+32bit版Windowsを使ってる場合は
+ツールバーのプロジェクト＞complexのプロパティ＞リンカー＞入力＞追加の依存ファイル  
+の「 **C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Lib\WS2_32.Lib** 」を  
+「 **C:\Program Files\Microsoft SDKs\Windows\v7.0A\Lib\WS2_32.Lib** 」に変更してください。  
+たぶん無いと思いますが、「 **WS2_32.Lib** 」が別の場所にある場合はその場所を指定してください。
+
 ツールバーのビルド＞ソリューションのビルドでコンパイルできます。  
 Release\npcomplex.dllが生成されているはずです。  
 
-もしエラーが出た場合、  
-ツールバーのプロジェクト＞complexのプロパティ＞リンカー＞入力＞追加の依存ファイル  
-がWS2_32.Libへのフルパスが入ってることを確認してください。  
-C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Lib\WS2_32.Libみたいな感じです。
-(slnにこういう設定も含まれてるかな？)  
-
-またwithout_nixysaをダウンロードした人は  
+またcomplex_src_without_nixysa.zipをダウンロードした人は  
 [http://d.hatena.ne.jp/ichhi/20110306/1299434439](http://d.hatena.ne.jp/ichhi/20110306/1299434439)  
 ここの「 **6.1 ビルドエラーの対処方法** 」を見てください。  
 
-●最後に
+
+Microsoft Virtual PCにて上記の流れでコンパイル可能なことを確認しました。  
+（[http://www.microsoft.com/en-us/download/details.aspx?id=11575](http://www.microsoft.com/en-us/download/details.aspx?id=11575)のWindows_7_IE8）
+
+●NPAPIの自作の仕方
+-------------------
+complex.hのComplexクラスの中身を編集して、それに合わせてcomplex.idlのメソッド定義部分を編集すれば  
+すぐにオリジナルのNPAPIを作ることが出来ます。とりあえずにはなりますが。  
+と言うか僕もそうやって作りました。Complexは元々nixysaのサンプルコードとして用意されていたものです。  
+クラス名やファイル名等も変えるのはまだやったことがないのでよく分かりません。  
+
+●メモ
 --------
-一応プラグインを作るのに読んだ解説サイト一覧を載せておきます。  
+プラグインを作るのに読んだ解説サイト一覧  
 
 ～NPAPI～  
 
