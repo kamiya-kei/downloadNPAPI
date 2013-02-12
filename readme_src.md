@@ -9,15 +9,15 @@ Download NPAPI Plugin for chrome, Windows
 ●環境の構築
 ------------
 ・まずNPAPIはC++なのでC++コンパイラが必要です。  
-**Visual C++ 2010 Express**を以下からダウンロードします。  
+ **Visual C++ 2010 Express** を以下からダウンロードします。  
 [http://www.microsoft.com/visualstudio/jpn/downloads#d-2010-express](http://www.microsoft.com/visualstudio/jpn/downloads#d-2010-express)  
 試用は30日間でそれ以降も利用する場合は無料登録が必要です。  
 
 ・NPAPIを作るのにnixysaを利用しているのでpythonが必要です。  
-**Python 2.6.6**を以下からダウンロードします。  
+ **Python 2.6.6** を以下からダウンロードします。  
 [http://www.python.org/getit/releases/2.6.6/](http://www.python.org/getit/releases/2.6.6/)  
 
-pywin32モジュールを使うので以下から「**pywin32-216.win32-py2.6.exe**」をダウンロードします。  
+pywin32モジュールを使うので以下から「 **pywin32-216.win32-py2.6.exe** 」をダウンロードします。  
 [http://sourceforge.net/projects/pywin32/files/pywin32/Build216/](http://sourceforge.net/projects/pywin32/files/pywin32/Build216/)  
 
 上記3つを全てインストールすれば環境は整った…はずです。  
@@ -33,25 +33,25 @@ complex_srcをダウンロードして下さい。
 Google Driveからでもダウンロードできます。  
 [https://docs.google.com/folder/d/0BxMqBbrrBxIDcVV6Q2h2SzJrQlk/edit?usp=sharing&pli=1](https://docs.google.com/folder/d/0BxMqBbrrBxIDcVV6Q2h2SzJrQlk/edit?usp=sharing&pli=1)  
 
-「**complex_src.zip**」と「**complex_src_without_nixysa.zip**」  
-の２つがありますが通常は「**complex_src.zip**」を利用してください。  
+「 **complex_src.zip** 」と「 **complex_src_without_nixysa.zip** 」  
+の２つがありますが通常は「 **complex_src.zip** 」を利用してください。  
 
-「**complex_src_without_nixysa.zip**」は既にnixysaを持っている人向けです。  
+「 **complex_src_without_nixysa.zip** 」は既にnixysaを持っている人向けです。  
 こちらをダウンロードした人は  
 nixysa-read-only(任意のフォルダ名)  
 ┣　nixysa  
 ┣　third_party  
 ┣　tools  
 ┗　examples(任意のフォルダ名)  
-　　　　┗　**complex**　┳　complex.h  
-　　　　　　　　　　 ┣　complex.idl  
-　　　　　　　　　　 ┣　　　…  
+　　　　┗　 **complex** 　┳　complex.h  
+　　　　　　　　　　　　　 ┣　complex.idl  
+　　　　　　　　　　　　　 ┣　　　…  
 の様に配置して下さい。  
 
 ●コンパイル
 ------------
 complex_src\examples\complex\complex.slnを開きます。  
-(「**complex_src_without_nixysa.zip**」をダウンロードした人はnixysa-read-only\examples\complex\complex.slnです）  
+(「 **complex_src_without_nixysa.zip** 」をダウンロードした人はnixysa-read-only\examples\complex\complex.slnです）  
 
 ツールバーのビルド＞ソリューションのビルドでコンパイルできます。  
 Release\npcomplex.dllが生成されているはずです。  
@@ -64,7 +64,7 @@ C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Lib\WS2_32.Libみたいな感じで
 
 またwithout_nixysaをダウンロードした人は  
 [http://d.hatena.ne.jp/ichhi/20110306/1299434439](http://d.hatena.ne.jp/ichhi/20110306/1299434439)  
-ここの「**6.1 ビルドエラーの対処方法**」を見てください。  
+ここの「 **6.1 ビルドエラーの対処方法** 」を見てください。  
 
 ●最後に
 --------
