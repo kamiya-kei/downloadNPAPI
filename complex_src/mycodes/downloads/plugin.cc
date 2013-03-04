@@ -16,16 +16,16 @@
 
 extern "C" {
   const char *NP_GetMIMEDescription(void) {
-    return "application/complex::Complex Sample MIME";
+    return "application/downloads::Downloads Sample MIME";
   }
 
   NPError NP_GetValue(NPP instance, NPPVariable variable, void *value) {
     switch (variable) {
       case NPPVpluginNameString:
-        *static_cast<const char **>(value) = "Complex Sample";
+        *static_cast<const char **>(value) = "Downloads Sample";
         break;
       case NPPVpluginDescriptionString:
-        *static_cast<const char **>(value) = "Complex Desc";
+        *static_cast<const char **>(value) = "Downloads Desc";
         break;
       default:
         return NPERR_INVALID_PARAM;

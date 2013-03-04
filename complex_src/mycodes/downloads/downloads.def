@@ -1,4 +1,4 @@
-LIBRARY   npcomplex
+LIBRARY   npdownloads
 
 EXPORTS
   NP_GetEntryPoints   @1

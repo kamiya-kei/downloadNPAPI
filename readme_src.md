@@ -4,7 +4,7 @@ Download NPAPI Plugin for chrome, Windows
 ■ソースコードのコンパイル
 --------------------------
 
-使い方はreadme.mdを見てください。
+使い方は[readme.md](https://github.com/PekeTaichi/downloadNPAPI/blob/master/readme.md)を見てください。
 
 ●環境の構築
 ------------
@@ -29,44 +29,46 @@ pywin32モジュールを使うので以下から「 **pywin32-216.win32-py2.6.exe** 」をダウン
 
 ●ソースコードのダウンロード
 ----------------------------
-complex_srcをダウンロードして下さい。  
+downloads_srcをダウンロードして下さい。  
 このGitHubページのZIPのとこからダウンロード出来たと思います。  
 
 Google Driveからでもダウンロードできます。  
 [https://docs.google.com/folder/d/0BxMqBbrrBxIDcVV6Q2h2SzJrQlk/edit?usp=sharing&pli=1](https://docs.google.com/folder/d/0BxMqBbrrBxIDcVV6Q2h2SzJrQlk/edit?usp=sharing&pli=1)  
 
-「 **complex_src.zip** 」と「 **complex_src_without_nixysa.zip** 」  
-の２つがありますが通常は「 **complex_src.zip** 」を利用してください。  
+「 **downloads_src.zip** 」と「 **downloads_src_without_nixysa.zip** 」  
+の２つがありますが通常は「 **downloads_src.zip** 」を利用してください。  
 
-「 **complex_src_without_nixysa.zip** 」は既にnixysaを持っている人向けです。  
+「 **downloads_src_without_nixysa.zip** 」は既にnixysaを持っている人向けです。  
 こちらをダウンロードした人は  
 nixysa-read-only(任意のフォルダ名)  
 ┣　nixysa  
 ┣　third_party  
 ┣　tools  
-┗　examples(任意のフォルダ名)  
-　　　　┗　 **complex** 　┳　complex.h  
-　　　　　　　　　　　　　 ┣　complex.idl  
+┗　mycodes(任意のフォルダ名)  
+　　　　┗　 **downloads** 　┳　downloads.h  
+　　　　　　　　　　　　　 ┣　downloads.idl  
 　　　　　　　　　　　　　 ┣　　　…  
 の様に配置して下さい。  
 
 ●コンパイル
 ------------
-complex_src\examples\complex\complex.slnを開きます。  
-(「 **complex_src_without_nixysa.zip** 」をダウンロードした人はnixysa-read-only\examples\complex\complex.slnです）  
+downloads_src\examples\downloads\downloads.slnを開きます。  
+(「 **downloads_src_without_nixysa.zip** 」をダウンロードした人はnixysa-read-only\examples\downloads\downloads.slnです）  
 
 最初にツール＞設定＞上級者用の設定をチェックします。(この方が分かりやすいと思います。)  
 
+上部ツールバー2段目真ん中あたりのソリューション構成が「 **Debug** 」になっていたら「 **Release** 」に変更する。  
+
 32bit版Windowsを使ってる場合は
-ツールバーのプロジェクト＞complexのプロパティ＞リンカー＞入力＞追加の依存ファイル  
+ツールバーのプロジェクト＞downloadsのプロパティ＞リンカー＞入力＞追加の依存ファイル  
 の「 **C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Lib\WS2_32.Lib** 」を  
 「 **C:\Program Files\Microsoft SDKs\Windows\v7.0A\Lib\WS2_32.Lib** 」に変更してください。  
 たぶん無いと思いますが、「 **WS2_32.Lib** 」が別の場所にある場合はその場所を指定してください。
 
 ツールバーのビルド＞ソリューションのビルドでコンパイルできます。  
-Release\npcomplex.dllが生成されているはずです。  
+Release\npdownloads.dllが生成されているはずです。  
 
-またcomplex_src_without_nixysa.zipをダウンロードした人は  
+またdownloads_src_without_nixysa.zipをダウンロードした人は  
 [http://d.hatena.ne.jp/ichhi/20110306/1299434439](http://d.hatena.ne.jp/ichhi/20110306/1299434439)  
 ここの「 **6.1 ビルドエラーの対処方法** 」を見てください。  
 
@@ -76,10 +78,12 @@ Microsoft Virtual PCにて上記の流れでコンパイル可能なことを確認しました。
 
 ●NPAPIの自作の仕方
 -------------------
-complex.hのComplexクラスの中身を編集して、それに合わせてcomplex.idlのメソッド定義部分を編集すれば  
-すぐにオリジナルのNPAPIを作ることが出来ます。とりあえずにはなりますが。  
-と言うか僕もそうやって作りました。Complexは元々nixysaのサンプルコードとして用意されていたものです。  
-クラス名やファイル名等も変えるのはまだやったことがないのでよく分かりません。  
+downloads.hのdownloadsクラスの中身を編集して、それに合わせてdownloads.idlのメソッド定義部分を編集すれば  
+すぐにオリジナルのNPAPIを作ることが出来ます。  
+クラス名の変更はdownloads.h及びdownloads.idlのclass Downloadsの部分を変更すれば出来ます。  
+プラグイン名の変更は…downloads.(def|h|idl|rc|slnなど)のファイル名を変更して  
+これらのファイルとplugin.cc、SConstructの中のdownloads及びDownloadsとなってる部分をエディタ等で一括置換すれば出来ます。  
+かなり無理やりだけど…。  
 
 ●メモ
 --------

@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="complex"
+	Name="downloads"
 	ProjectGUID="{1F2246BF-A003-4602-814C-77603AA2F41B}"
-	RootNamespace="complex"
+	RootNamespace="downloads"
 	>
 	<Platforms>
 		<Platform
@@ -64,7 +64,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)\np$(ProjectName).dll"
-				ModuleDefinitionFile="complex.def"
+				ModuleDefinitionFile="downloads.def"
 				GenerateDebugInformation="true"
 				TargetMachine="1"
 			/>
@@ -142,7 +142,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)\np$(ProjectName).dll"
-				ModuleDefinitionFile="complex.def"
+				ModuleDefinitionFile="downloads.def"
 				GenerateDebugInformation="true"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -189,7 +189,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\glue\complex_glue.cc"
+				RelativePath=".\glue\downloads_glue.cc"
 				>
 			</File>
 			<File
@@ -223,11 +223,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\complex.h"
+				RelativePath=".\downloads.h"
 				>
 			</File>
 			<File
-				RelativePath=".\glue\complex_glue.h"
+				RelativePath=".\glue\downloads_glue.h"
 				>
 			</File>
 			<File
@@ -253,7 +253,7 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath=".\complex.rc"
+				RelativePath=".\downloads.rc"
 				>
 			</File>
 		</Filter>
@@ -261,7 +261,7 @@
 			Name="IDL files"
 			>
 			<File
-				RelativePath=".\complex.idl"
+				RelativePath=".\downloads.idl"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -289,7 +289,7 @@
 			Name="DEF files"
 			>
 			<File
-				RelativePath=".\complex.def"
+				RelativePath=".\downloads.def"
 				>
 			</File>
 		</Filter>

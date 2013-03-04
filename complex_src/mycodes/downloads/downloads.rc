@@ -70,13 +70,13 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "FileDescription", "Download NPAPI for windows"
-            VALUE "FileVersion", "0,0,0,1"
-            VALUE "InternalName", "npcomplex"
+            VALUE "FileVersion", "0,9,0,0"
+            VALUE "InternalName", "npdownloads"
             VALUE "LegalCopyright", "Copyright (C) 2013"
-            VALUE "MIMEType", "application/complex"
-            VALUE "OriginalFilename", "npcomplex.dll"
+            VALUE "MIMEType", "application/downloads"
+            VALUE "OriginalFilename", "npdownloads.dll"
             VALUE "ProductName", "Download NPAPI for windows"
-            VALUE "ProductVersion", "0,0,0,1"
+            VALUE "ProductVersion", "0,9,0,0"
         END
     END
     BLOCK "VarFileInfo"

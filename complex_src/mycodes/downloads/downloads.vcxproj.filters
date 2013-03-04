@@ -24,7 +24,7 @@
     <ClCompile Include="..\..\nixysa\static_glue\npapi\common.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="glue\complex_glue.cc">
+    <ClCompile Include="glue\downloads_glue.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="glue\globals_glue.cc">
@@ -47,10 +47,10 @@
     <ClInclude Include="..\..\nixysa\static_glue\npapi\common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="complex.h">
+    <ClInclude Include="downloads.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="glue\complex_glue.h">
+    <ClInclude Include="glue\downloads_glue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="glue\globals_glue.h">
@@ -67,17 +67,17 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="complex.rc">
+    <ResourceCompile Include="downloads.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="complex.def">
+    <None Include="downloads.def">
       <Filter>DEF files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="complex.idl">
+    <CustomBuild Include="downloads.idl">
       <Filter>IDL files</Filter>
     </CustomBuild>
   </ItemGroup>

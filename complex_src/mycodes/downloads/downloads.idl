@@ -1,0 +1,32 @@
+[binding_model=by_value, include="downloads.h"]
+class Downloads {
+  Downloads();
+  std::string post(std::string url, std::string postmsg);
+  void download(std::string url, std::string path, std::string filename, int ask);
+  int getFileSize();
+  int getNowSize();
+  float getNowPer();
+  int getCancelFlag();
+  std::string getCookie();
+  std::string getReferer();
+  std::string getERROR();
+  void setFileSize(int value);
+  void setNowSize(int value);
+  void setNowPer(float value);
+  void setCancelFlag(int value);
+  void addCookie(std::string value);
+  void clearCookie();
+  void setCookie(std::string value);
+  void setReferer(std::string value);
+  void setERROR(std::string value);
+  std::string selectDirDialog();
+  std::string saveFileDialog(std::string path, std::string filename);
+  int alertDialog(std::string msg);
+  int askDialog(std::string msg, std::string title, int flag);
+  int dirExist(std::string path);
+  int makeDirs(std::string path);
+  std::string getNonFilename(std::string path, std::string filename);
+  std::string getDesktop();
+  int securityCheck(std::string _path);
+  int openExplore(std::string path);
+};

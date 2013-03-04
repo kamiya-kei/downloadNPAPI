@@ -12,7 +12,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1F2246BF-A003-4602-814C-77603AA2F41B}</ProjectGuid>
-    <RootNamespace>complex</RootNamespace>
+    <RootNamespace>downloads</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -45,6 +45,7 @@
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(LibraryPath)</LibraryPath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(LibraryPath)</LibraryPath>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">np$(ProjectName)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <PreBuildEvent>
@@ -69,7 +70,7 @@
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)np$(ProjectName).dll</OutputFile>
-      <ModuleDefinitionFile>complex.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>downloads.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
@@ -89,14 +90,14 @@ xcopy /Y /I /F $(OutDir)$(TargetName).pdb "%APPDATA%\Mozilla\Plugins\"</Command>
     </CustomBuildStep>
     <ClCompile>
       <AdditionalIncludeDirectories>.;glue;..\..\nixysa\static_glue\npapi;..\..\third_party\npapi\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_WIN32;_WINDOWS;OS_WINDOWS;WIN32_LEAN_AND_MEAN;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;WIN32;_WIN32;_WINDOWS;OS_WINDOWS;NOMINMAX;WIN32_LEAN_AND_MEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)np$(ProjectName).dll</OutputFile>
-      <ModuleDefinitionFile>complex.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>downloads.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -111,7 +112,7 @@ xcopy /Y /I /F $(OutDir)$(TargetName).pdb "%APPDATA%\Mozilla\Plugins\"</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\nixysa\static_glue\npapi\common.cc" />
-    <ClCompile Include="glue\complex_glue.cc" />
+    <ClCompile Include="glue\downloads_glue.cc" />
     <ClCompile Include="glue\globals_glue.cc" />
     <ClCompile Include="..\..\nixysa\static_glue\npapi\main.cc" />
     <ClCompile Include="..\..\nixysa\static_glue\npapi\npn_api.cc" />
@@ -120,18 +121,18 @@ xcopy /Y /I /F $(OutDir)$(TargetName).pdb "%APPDATA%\Mozilla\Plugins\"</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\nixysa\static_glue\npapi\common.h" />
-    <ClInclude Include="complex.h" />
-    <ClInclude Include="glue\complex_glue.h" />
+    <ClInclude Include="downloads.h" />
+    <ClInclude Include="glue\downloads_glue.h" />
     <ClInclude Include="glue\globals_glue.h" />
     <ClInclude Include="..\..\nixysa\static_glue\npapi\npn_api.h" />
     <ClInclude Include="..\..\nixysa\static_glue\npapi\plugin_main.h" />
     <ClInclude Include="..\..\nixysa\static_glue\npapi\static_object.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="complex.rc" />
+    <ResourceCompile Include="downloads.rc" />
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="complex.idl">
+    <CustomBuild Include="downloads.idl">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Performing IDL Step</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)\..\..\nixysa\codegen.bat --output-dir=glue --generate=npapi --force %(Filename)%(Extension)</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">glue\%(Filename)_glue.cc;glue\%(Filename)_glue.h;glue\globals_glue.cc;glue\globals_glue.h;glue\hash;%(Outputs)</Outputs>
@@ -141,7 +142,7 @@ xcopy /Y /I /F $(OutDir)$(TargetName).pdb "%APPDATA%\Mozilla\Plugins\"</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <None Include="complex.def" />
+    <None Include="downloads.def" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
