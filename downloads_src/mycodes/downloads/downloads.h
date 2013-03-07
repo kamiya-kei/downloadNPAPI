@@ -1,10 +1,11 @@
-#include <stdio.h>
+ï»¿#include <stdio.h>
 #include <winsock2.h>
 #include <shlwapi.h>
 #include <Windows.h>
 #include <CommDlg.h>
 
 #include <shlobj.h>
+#include <shellapi.h>
 
 #include <vector>
 
@@ -16,18 +17,18 @@
 #include <process.h>
 
 //using namespace std;
-
 #pragma comment(lib, "shlwapi.lib" )
 #pragma comment(lib,"shell32.lib")
 #pragma once
 #define BUF_SIZE 256
 
-//ƒfƒtƒHƒ‹ƒgˆø”‚Íjavascript‚©‚ç‚ÌŒÄ‚Ño‚µ‚Å‚Íg—p•s‰Â
 
-//éŒ¾
+//ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå¼•æ•°ã¯javascriptã‹ã‚‰ã®å‘¼ã³å‡ºã—ã§ã¯ä½¿ç”¨ä¸å¯
+
+//å®£è¨€
 class Downloads;
 
-//ƒXƒŒƒbƒh‚Ìƒpƒ‰ƒ[ƒ^[’è‹`
+//ã‚¹ãƒ¬ãƒƒãƒ‰ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼å®šç¾©
 typedef struct _param{
 	Downloads *ins;
 	char *domain;
@@ -36,22 +37,24 @@ typedef struct _param{
 	std::string fullpath;
 } param;
 
-//ƒvƒ‰ƒOƒCƒ“–¼‚àƒNƒ‰ƒX–¼‚àƒTƒ“ƒvƒ‹‚Ü‚ñ‚ÜBŒã‚Å•Ï‚¦‚éB
+//ãƒ—ãƒ©ã‚°ã‚¤ãƒ³åã‚‚ã‚¯ãƒ©ã‚¹åã‚‚ã‚µãƒ³ãƒ—ãƒ«ã¾ã‚“ã¾ã€‚å¾Œã§å¤‰ãˆã‚‹ã€‚
 class Downloads {
 public:
-	// nyxysa‚Å•¡”class‘‚­•û–@‚ª•ª‚©‚ç‚È‚¢
+	// nyxysaã§è¤‡æ•°classæ›¸ãæ–¹æ³•ãŒåˆ†ã‹ã‚‰ãªã„
 	Downloads(){
-		//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+		//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		setFileSize(-1);
 		setNowSize(0);
 		setNowPer(0);
 		setCancelFlag(0);
 		setReferer("");
 		setERROR("");
+		std::locale::global(std::locale("japanese"));
+		//setlocale(LC_CTYPE, "");
 	}
 	std::string post(std::string url, std::string postmsg){
 		/**
-		 * URL‚ÉPOST‚µ‚ÄCOOKIE‚ğæ“¾
+		 * URLã«POSTã—ã¦COOKIEã‚’å–å¾—
 		 * postmsg: ex) pixiv_id=(id)&pass=(pass)&mode=login&skip=1
 		 */
 		std::string cookie;
@@ -142,13 +145,13 @@ public:
 		connect(sock, (struct sockaddr *)&server, sizeof(server));
 
 		memset(buf, 0, sizeof(buf));
-		sprintf_s(buf, sizeof(buf), "POST %s HTTP/1.1\r\n", rqpath);//ƒƒ\ƒbƒh‚ğPOST‚É
+		sprintf_s(buf, sizeof(buf), "POST %s HTTP/1.1\r\n", rqpath);//ãƒ¡ã‚½ãƒƒãƒ‰ã‚’POSTã«
 		send(sock, buf, (int)strlen(buf), 0);
 		sprintf_s(buf, sizeof(buf), "host: %s\r\n", domain);
 		send(sock, buf, (int)strlen(buf), 0);
 		sprintf_s(buf, sizeof(buf), "\r\n");
 		send(sock, buf, (int)strlen(buf), 0);
-		sprintf_s(buf, sizeof(buf), postmsg.c_str());//‹ós‚ÌŒã‚Éƒ|ƒXƒgƒƒbƒZ[ƒW‚ğ‘—M
+		sprintf_s(buf, sizeof(buf), postmsg.c_str());//ç©ºè¡Œã®å¾Œã«ãƒã‚¹ãƒˆãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’é€ä¿¡
 		send(sock, buf, (int)strlen(buf), 0);
 
 		std::string source = "";
@@ -167,7 +170,7 @@ public:
     			} 
     			std::cout << source << std::endl;
 				std::string::size_type k1, k2;
-				k1 = source.find("Set-Cookie: ");//ƒNƒbƒL[‚Ìæ“¾
+				k1 = source.find("Set-Cookie: ");//ã‚¯ãƒƒã‚­ãƒ¼ã®å–å¾—
 				k2 = source.find(";");
     			if (k1 != -1){
 					closesocket(sock);
@@ -175,7 +178,7 @@ public:
  					cookie = source.substr(k1 + 12, k2 - (k1 + 12));
 					std::cout << cookie <<std::endl;
 					addCookie(cookie);
-   					return cookie;//¬Œ÷
+   					return cookie;//æˆåŠŸ
     			}
     			std::cout << "--------------------" << std::endl;
     			source = "";
@@ -183,89 +186,91 @@ public:
     		}
     		source += c;
 		}
-		//¸”s
+		//å¤±æ•—
 		closesocket(sock);
 		WSACleanup();
 		return "";
 	}
 
-	//ƒ_ƒEƒ“ƒ[ƒhŠÖ˜A
-	void download(std::string url, std::string path, std::string filename, int ask=0){
+	//ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰é–¢é€£
+	void download(std::string url, std::wstring wpath, std::wstring wfilename, int ask=0){
 		/**
-		 * ƒ_ƒEƒ“ƒ[ƒh
+		 * ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰
 		 *
-		 * filename‚ğ‹ó•¶š‚É‚µ‚Äpath‚Éƒtƒ‹ƒpƒX‚Å‚àOK
-		 * ask=1‚Å–¼‘O‚ğ•t‚¯‚Ä•Û‘¶ƒ_ƒCƒAƒƒO‚ğ•\¦
-		 * @‚»‚ÌÛApath, filename‚Í•Û‘¶ƒ_ƒCƒAƒƒO‚ÅƒfƒtƒHƒ‹ƒgƒpƒXAƒfƒtƒHƒ‹ƒgƒtƒ@ƒCƒ‹–¼‚Æ‚µ‚Ä—˜—p
+		 * filenameã‚’ç©ºæ–‡å­—ã«ã—ã¦pathã«ãƒ•ãƒ«ãƒ‘ã‚¹ã§ã‚‚OK
+		 * ask=1ã§åå‰ã‚’ä»˜ã‘ã¦ä¿å­˜ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
+		 * ã€€ãã®éš›ã€path, filenameã¯ä¿å­˜ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã§ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒ‘ã‚¹ã€ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒ•ã‚¡ã‚¤ãƒ«åã¨ã—ã¦åˆ©ç”¨
 		 *
-		 * ƒZƒLƒ…ƒŠƒeƒB‘ÎôF
-		 *   Eã‘‚«•Û‘¶‚ÍŠm”Fƒ_ƒCƒAƒƒO‚ğo‚·
-		 *   EŠëŒ¯‚ÈƒpƒX(ƒXƒ^[ƒgƒAƒbƒvƒtƒHƒ‹ƒ_‚È‚Ç)‚Ö‚Ì•Û‘¶‚Í•s‰Â
+		 * ã‚»ã‚­ãƒ¥ãƒªãƒ†ã‚£å¯¾ç­–ï¼š
+		 *   ãƒ»ä¸Šæ›¸ãä¿å­˜æ™‚ã¯ç¢ºèªãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’å‡ºã™
+		 *   ãƒ»å±é™ºãªãƒ‘ã‚¹(ã‚¹ã‚¿ãƒ¼ãƒˆã‚¢ãƒƒãƒ—ãƒ•ã‚©ãƒ«ãƒ€ãªã©)ã¸ã®ä¿å­˜ã¯ä¸å¯
 		 */
 		std::string domain, rqpath, fullpath;
 		int port;
 		std::string _domain;
+		std::string path = wstr2str(wpath);
+		std::string filename = wstr2str(wfilename);
 
 		if (ask == 1) {
-			//•Û‘¶æ‚ğƒ†[ƒU[‚ÉŠm”F‚·‚éê‡
+			//ä¿å­˜å…ˆã‚’ãƒ¦ãƒ¼ã‚¶ãƒ¼ã«ç¢ºèªã™ã‚‹å ´åˆ
 			fullpath = saveFileDialog(path, filename);
 			if (path.empty()) {
-				std::cout << "ƒ_ƒEƒ“ƒ[ƒh‚ÍƒLƒƒƒ“ƒZƒ‹‚³‚ê‚Ü‚µ‚½" << std::endl;
+				std::cout << "ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã¯ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã•ã‚Œã¾ã—ãŸ" << std::endl;
 				return;
 			}
 			std::string::size_type n = fullpath.find_last_of("\\");
 			path = fullpath.substr(0, n);
 			filename = fullpath.substr(n + 1, fullpath.size() - (n + 1));
 		} else {
-			//•Û‘¶æ‚ğŒˆ‚Ü‚Á‚Ä‚éê‡
+			//ä¿å­˜å…ˆã‚’æ±ºã¾ã£ã¦ã‚‹å ´åˆ
 			if (filename.empty()){
-				//path‚Éƒtƒ‹ƒpƒX‚ğ“n‚µAfilename‚ğÈ—ª‚µ‚½ê‡
+				//pathã«ãƒ•ãƒ«ãƒ‘ã‚¹ã‚’æ¸¡ã—ã€filenameã‚’çœç•¥ã—ãŸå ´åˆ
 				fullpath = path;
 				std::string::size_type n = fullpath.find_last_of("\\");
 				if (n == std::string::npos) {
 					n = fullpath.find_last_of("/");
 					if (n == std::string::npos) {
-						std::cout << "ˆø”‚Ì’l‚ª•s³‚Å‚·" << std::endl;
+						std::cout << "å¼•æ•°ã®å€¤ãŒä¸æ­£ã§ã™" << std::endl;
 						return;
 					}
 				}
 				path = fullpath.substr(0, n);
 				filename = fullpath.substr(n + 1, fullpath.size() - (n + 1));
 			} else {
-				//path‚Æfilename‚ğ•’Ê‚Éw’è‚µ‚½ê‡
+				//pathã¨filenameã‚’æ™®é€šã«æŒ‡å®šã—ãŸå ´åˆ
 				fullpath = path + "\\" + filename;
 			}
 
-			//ã‘‚«ƒ`ƒFƒbƒN
+			//ä¸Šæ›¸ããƒã‚§ãƒƒã‚¯
 			if (fileExist(path, filename)) {
-				//ã‘‚«‚É‚È‚éê‡‚ÍŠm”Fƒ_ƒCƒAƒƒO‚ğo‚·
-				std::cout << "ƒtƒ@ƒCƒ‹‚ªd•¡‚µ‚Ä‚¢‚Ü‚·" << std::endl;
-				int n = askDialog(fullpath + "‚ğã‘‚«‚µ‚Ü‚·‚©H", "Šm”F", 0);
+				//ä¸Šæ›¸ãã«ãªã‚‹å ´åˆã¯ç¢ºèªãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’å‡ºã™
+				std::cout << "ãƒ•ã‚¡ã‚¤ãƒ«ãŒé‡è¤‡ã—ã¦ã„ã¾ã™" << std::endl;
+				int n = askDialog(fullpath + "ã‚’ä¸Šæ›¸ãã—ã¾ã™ã‹ï¼Ÿ", "ç¢ºèª", 0);
 				if (n < 0) {
-					//uƒLƒƒƒ“ƒZƒ‹v‘I‘ğ‚Åƒ_ƒEƒ“ƒ[ƒh’†~
-					std::cout << "ƒ_ƒEƒ“ƒ[ƒh‚ÍƒLƒƒƒ“ƒZƒ‹‚³‚ê‚Ü‚µ‚½" << std::endl;
+					//ã€Œã‚­ãƒ£ãƒ³ã‚»ãƒ«ã€é¸æŠã§ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ä¸­æ­¢
+					std::cout << "ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã¯ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã•ã‚Œã¾ã—ãŸ" << std::endl;
 					return;
 				}else if (n == 0) {
-					//u‚¢‚¢‚¦v‘I‘ğ‚Í•Ê‚Ì–¼‘O‚Å•Û‘¶(–¼‘O‚ğ•t‚¯‚Ä•Û‘¶ƒ_ƒCƒAƒƒOŒÄ‚Ño‚µ)
+					//ã€Œã„ã„ãˆã€é¸æŠã¯åˆ¥ã®åå‰ã§ä¿å­˜(åå‰ã‚’ä»˜ã‘ã¦ä¿å­˜ãƒ€ã‚¤ã‚¢ãƒ­ã‚°å‘¼ã³å‡ºã—)
 					fullpath =saveFileDialog(path, getNonFilename(path, filename));
 					if (fullpath.empty()) {
-						//–¼‘O‚ğ•t‚¯‚Ä•Û‘¶ƒ_ƒCƒAƒƒO‚ÅuƒLƒƒƒ“ƒZƒ‹v(ƒ_ƒEƒ“ƒ[ƒhƒLƒƒƒ“ƒZƒ‹)
-						std::cout << "ƒ_ƒEƒ“ƒ[ƒh‚ÍƒLƒƒƒ“ƒZƒ‹‚³‚ê‚Ü‚µ‚½" << std::endl;
+						//åå‰ã‚’ä»˜ã‘ã¦ä¿å­˜ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã§ã€Œã‚­ãƒ£ãƒ³ã‚»ãƒ«ã€æ™‚(ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã‚­ãƒ£ãƒ³ã‚»ãƒ«)
+						std::cout << "ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã¯ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã•ã‚Œã¾ã—ãŸ" << std::endl;
 						return;
 					}
 				}
 			}
 		}
 
-		//•Û‘¶æ‚ÌˆÀ‘S«‚ğŠm”F
+		//ä¿å­˜å…ˆã®å®‰å…¨æ€§ã‚’ç¢ºèª
 		if (securityCheck(path) == 0) {
-			std::cout << "•Û‘¶æ‚ªŠëŒ¯‚ÈƒpƒX‚Å‚·" << std::endl;
+			std::cout << "ä¿å­˜å…ˆãŒå±é™ºãªãƒ‘ã‚¹ã§ã™" << std::endl;
 			return;
 		}
-		//•Û‘¶æAƒtƒ@ƒCƒ‹–¼Œˆ‚ß@‚±‚±‚Ü‚Å
+		//ä¿å­˜å…ˆã€ãƒ•ã‚¡ã‚¤ãƒ«åæ±ºã‚ã€€ã“ã“ã¾ã§
 		std::cout << "fullpath: " << fullpath << std::endl;
 
-		//URL‰ğÍ(ƒvƒƒgƒRƒ‹AƒhƒƒCƒ“AƒpƒXAƒ|[ƒg‚Ìæ“¾)
+		//URLè§£æ(ãƒ—ãƒ­ãƒˆã‚³ãƒ«ã€ãƒ‰ãƒ¡ã‚¤ãƒ³ã€ãƒ‘ã‚¹ã€ãƒãƒ¼ãƒˆã®å–å¾—)
 		int n= url.find("://");
 		if (n == -1) {
     		std::cout << "not found ://" << std::endl;
@@ -281,23 +286,23 @@ public:
 		rqpath = _domain.substr(n);
 		n = domain.find(":");
 		if (n == -1) {
-			//URL‚Éƒ|[ƒg”Ô†‚ªŠÜ‚Ü‚ê‚Ä‚È‚¢ê‡(ƒ|[ƒg80)
+			//URLã«ãƒãƒ¼ãƒˆç•ªå·ãŒå«ã¾ã‚Œã¦ãªã„å ´åˆ(ãƒãƒ¼ãƒˆ80)
     		port = 80;
 		} else {
-			//URL‚Éƒ|[ƒg”Ô†‚ªŠÜ‚Ü‚ê‚Ä‚éê‡
+			//URLã«ãƒãƒ¼ãƒˆç•ªå·ãŒå«ã¾ã‚Œã¦ã‚‹å ´åˆ
     		domain = domain.substr(0, n);
     		port = atoi(_domain.substr(n + 1).c_str());
 		}
-		//URL‰ğÍ‚±‚±‚Ü‚Å
+		//URLè§£æã“ã“ã¾ã§
 		std::cout << "domain: " << domain << ", rqpath: " << rqpath << ", port: " << port << std::endl;
 
-		//ƒXƒŒƒbƒh‚Ìƒpƒ‰ƒ[ƒ^‚Ìİ’è
+		//ã‚¹ãƒ¬ãƒƒãƒ‰ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã®è¨­å®š
 		param p = { this, const_cast<char*>(domain.c_str()), const_cast<char*>(rqpath.c_str()), port, fullpath};
-		//ƒXƒŒƒbƒh‚Ì‹N“®
+		//ã‚¹ãƒ¬ãƒƒãƒ‰ã®èµ·å‹•
 		h = (HANDLE)_beginthread(downloading, 0, &p);
 
-		//‚±‚ê‚ª–³‚¢‚ÆƒNƒ‰ƒbƒVƒ…‚·‚é
-		//‚Å‚à‚±‚ê‘‚­‚Æƒ}ƒ‹ƒ`ƒXƒŒƒbƒh‚É‚È‚ç‚È‚¢c
+		//ã“ã‚ŒãŒç„¡ã„ã¨ã‚¯ãƒ©ãƒƒã‚·ãƒ¥ã™ã‚‹
+		//ã§ã‚‚ã“ã‚Œæ›¸ãã¨ãƒãƒ«ãƒã‚¹ãƒ¬ãƒƒãƒ‰ã«ãªã‚‰ãªã„â€¦
 		WaitForSingleObject(h, INFINITE);
 		CloseHandle(h);
 		return;
@@ -338,11 +343,11 @@ public:
 	void setReferer(std::string value){ referer = value; }
 	void setERROR(std::string value){ error = value; }
 
-	//ƒ_ƒCƒAƒƒOŠÖ˜A
-	std::string selectDirDialog() {
+	//ãƒ€ã‚¤ã‚¢ãƒ­ã‚°é–¢é€£
+	std::wstring selectDirDialog() {
 		/**
-		 * ƒfƒBƒŒƒNƒgƒŠ‘I‘ğƒ_ƒCƒAƒƒO‚ÌŒÄ‚Ño‚µ
-		 * ƒcƒŠ[ƒ^ƒCƒv(İ’è—p)
+		 * ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªé¸æŠãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®å‘¼ã³å‡ºã—
+		 * ãƒ„ãƒªãƒ¼ã‚¿ã‚¤ãƒ—(è¨­å®šç”¨)
 		 */
 		BROWSEINFO bi;
 		char folder[260];
@@ -353,24 +358,24 @@ public:
 		memset(&bi, 0, sizeof(BROWSEINFO));
 		bi.hwndOwner = NULL;
 		bi.pszDisplayName = folder;
-		bi.lpszTitle = TEXT("ƒtƒHƒ‹ƒ_‚ğ‘I‘ğ‚µ‚Ä‚­‚¾‚³‚¢");
+		bi.lpszTitle = TEXT("ãƒ•ã‚©ãƒ«ãƒ€ã‚’é¸æŠã—ã¦ãã ã•ã„");
 		bi.ulFlags = BIF_RETURNONLYFSDIRS;
 		idl = SHBrowseForFolder(&bi);
 		if(idl){
 			int b = SHGetPathFromIDList(idl, folder);
 			if(b){
-				return (std::string)folder;
+				return str2wstr((std::string)folder);
 			}
 		}
 		g_pMalloc->Free(idl);
-		return "";
+		return str2wstr("");
 	}
-	std::string saveFileDialog(std::string path, std::string filename) {
+	std::string saveFileDialog(std::string path, std::string filename){
 		/**
-		 * –¼‘O‚ğ‚Â‚¯‚Ä•Û‘¶ƒ_ƒCƒAƒƒO‚ÌŒÄ‚Ño‚µ
-		 * (ã‘‚«•Û‘¶‚ÌŠm”F‚ ‚è)
+		 * åå‰ã‚’ã¤ã‘ã¦ä¿å­˜ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®å‘¼ã³å‡ºã—
+		 * (ä¸Šæ›¸ãä¿å­˜ã®ç¢ºèªã‚ã‚Š)
 		 *
-		 * –ß‚è’lFƒtƒ@ƒCƒ‹‚Ìƒtƒ‹ƒpƒX, ƒLƒƒƒ“ƒZƒ‹‚Í‹ó”’•¶š
+		 * æˆ»ã‚Šå€¤ï¼šãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ•ãƒ«ãƒ‘ã‚¹, ã‚­ãƒ£ãƒ³ã‚»ãƒ«æ™‚ã¯ç©ºç™½æ–‡å­—
 		 */
 		static OPENFILENAME ofn;
 		static TCHAR szFile[MAX_PATH];
@@ -379,42 +384,52 @@ public:
 		strncpy_s(szFile, sizeof(szFile), tmp, strlen(tmp));
 	
 		memset(&ofn, 0, sizeof(OPENFILENAME));
-		//ƒ_ƒCƒAƒƒO‚Ìİ’è
+		//ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®è¨­å®š
 		ofn.lStructSize = sizeof(OPENFILENAME);
 		ofn.hwndOwner = NULL;
-		ofn.lpstrInitialDir = const_cast<char*>(path.c_str());//‰ŠúƒtƒHƒ‹ƒ_
-		ofn.lpstrFile = szFile;//Œ‹‰Ê‚ğó‚¯æ‚éƒoƒbƒtƒ@A‰Šúƒtƒ@ƒCƒ‹–¼
+		ofn.lpstrInitialDir = const_cast<char*>(path.c_str());//åˆæœŸãƒ•ã‚©ãƒ«ãƒ€
+		ofn.lpstrFile = szFile;//çµæœã‚’å—ã‘å–ã‚‹ãƒãƒƒãƒ•ã‚¡ã€åˆæœŸãƒ•ã‚¡ã‚¤ãƒ«å
 		ofn.nMaxFile = MAX_PATH;
-		ofn.lpstrTitle = TEXT("–¼‘O‚ğ•t‚¯‚Ä•Û‘¶");
-		ofn.lpstrFilter = TEXT("‚·‚×‚Ä‚Ìƒtƒ@ƒCƒ‹(*.*)");
+		ofn.lpstrTitle = TEXT("åå‰ã‚’ä»˜ã‘ã¦ä¿å­˜");
+		ofn.lpstrFilter = TEXT("ã™ã¹ã¦ã®ãƒ•ã‚¡ã‚¤ãƒ«(*.*)");
 		//ofn.lpstrDefExt = TEXT(".jpg");
-		ofn.Flags = OFN_OVERWRITEPROMPT;//ã‘‚«‚·‚éê‡AŠm”Fƒ_ƒCƒAƒƒO‚ğo‚·
+		ofn.Flags = OFN_OVERWRITEPROMPT;//ä¸Šæ›¸ãã™ã‚‹å ´åˆã€ç¢ºèªãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’å‡ºã™
 
-		//ƒ_ƒCƒAƒƒO‚ÌŒÄ‚Ño‚µ
+		//ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®å‘¼ã³å‡ºã—
 		if ( GetSaveFileName(&ofn) ){
 			std::cout << "szFile : " << szFile << std::endl;
-			return szFile;//char*Œ^¨stringŒ^ƒLƒƒƒXƒg‚µ‚Ä‚­‚ê‚é
+			return szFile;//char*å‹â†’stringå‹ã‚­ãƒ£ã‚¹ãƒˆã—ã¦ãã‚Œã‚‹
 		} 
-		//ƒLƒƒƒ“ƒZƒ‹ƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚½ê‡
+		//ã‚­ãƒ£ãƒ³ã‚»ãƒ«ãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ãŸå ´åˆ
 		std::cout << "miss" << std::endl;
 		return "";
 	}
+	std::wstring saveFileDialog(std::wstring wpath, std::wstring wfilename) {
+		//javascriptã‹ã‚‰ã®å‘¼ã³å‡ºã—ç”¨(æ—¥æœ¬èªå¯¾å¿œã®ç‚º)
+		std::string path = wstr2str(wpath);
+		std::string filename = wstr2str(wfilename);
+		return str2wstr(saveFileDialog(path, filename));
+	}
 	int alertDialog(std::string msg){
 		/**
-		 * Œxƒ_ƒCƒAƒƒO‚ÌŒÄ‚Ño‚µ
-		 */
-		return MessageBox(NULL, msg.c_str(), "Œx", MB_OK | MB_ICONERROR | MB_SETFOREGROUND);
+		 * è­¦å‘Šãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®å‘¼ã³å‡ºã—
+		 */		
+		return MessageBox(NULL, msg.c_str(), "è­¦å‘Š", MB_OK | MB_ICONERROR | MB_SETFOREGROUND);
+	}
+	int alertDialog(std::wstring wmsg){
+		//javascriptã‹ã‚‰ã®å‘¼ã³å‡ºã—ç”¨(æ—¥æœ¬èªå¯¾å¿œã®ç‚º)
+		std::string msg = wstr2str(wmsg);
+		return alertDialog(msg);
 	}
 	int askDialog(std::string msg, std::string title, int flag){
 		/**
-		 * Šm”Fƒ_ƒCƒAƒƒO(‚Í‚¢A‚¢‚¢‚¦AƒLƒƒƒ“ƒZƒ‹)‚ÌŒÄ‚Ño‚µ
+		 * ç¢ºèªãƒ€ã‚¤ã‚¢ãƒ­ã‚°(ã¯ã„ã€ã„ã„ãˆã€ã‚­ãƒ£ãƒ³ã‚»ãƒ«)ã®å‘¼ã³å‡ºã—
 		 * 
-		 * ˆø”: flag) 1 = ‚Í‚¢or‚¢‚¢‚¦, 0 = ‚Í‚¢or‚¢‚¢‚¦orƒLƒƒƒ“ƒZƒ‹
-		 * –ß‚è’l:1 = ‚Í‚¢, 0 = ‚¢‚¢‚¦, -1 = ƒLƒƒƒ“ƒZƒ‹
+		 * å¼•æ•°: flag) 1 = ã¯ã„orã„ã„ãˆ, 0 = ã¯ã„orã„ã„ãˆorã‚­ãƒ£ãƒ³ã‚»ãƒ«
+		 * æˆ»ã‚Šå€¤:1 = ã¯ã„, 0 = ã„ã„ãˆ, -1 = ã‚­ãƒ£ãƒ³ã‚»ãƒ«
 		 * 
-		 * ex) •Û‘¶‚ÌŠm”F (ƒtƒ@ƒCƒ‹–¼)‚ÍŠù‚É‘¶İ‚µ‚Ü‚·B\nã‘‚«‚µ‚Ü‚·‚©H
+		 * ex) ä¿å­˜ã®ç¢ºèª (ãƒ•ã‚¡ã‚¤ãƒ«å)ã¯æ—¢ã«å­˜åœ¨ã—ã¾ã™ã€‚\nä¸Šæ›¸ãã—ã¾ã™ã‹ï¼Ÿ
 		 */
- 
 		int res, tmp;
 		if (flag == 0) {
 			tmp = MB_YESNOCANCEL | MB_ICONWARNING | MB_SETFOREGROUND;
@@ -433,37 +448,50 @@ public:
 		default:
 			return -2;
 		}
+
+	}
+	int askDialog(std::wstring wmsg, std::wstring wtitle, int flag){
+		//javascriptã‹ã‚‰ã®å‘¼ã³å‡ºã—ç”¨(æ—¥æœ¬èªå¯¾å¿œã®ç‚º)
+		std::string msg = wstr2str(wmsg);
+		std::string title = wstr2str(wtitle);
+		return askDialog(msg, title, flag);
 	}
 
-	//ƒpƒXŠÖ˜A
+	//ãƒ‘ã‚¹é–¢é€£
 	int dirExist(std::string path){
 		/**
-		 * w’è‚µ‚½ƒpƒX‚ÌƒfƒBƒŒƒNƒgƒŠ‚ª‘¶İ‚·‚é‚©Šm”F
+		 * æŒ‡å®šã—ãŸãƒ‘ã‚¹ã®ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªãŒå­˜åœ¨ã™ã‚‹ã‹ç¢ºèª
 		 */
 		return PathIsDirectory(path.c_str());
 	}
-	int makeDirs(std::string path){
+	int dirExist(std::wstring wpath){
+		//javascriptã‹ã‚‰ã®å‘¼ã³å‡ºã—ç”¨(æ—¥æœ¬èªå¯¾å¿œã®ç‚º)
+		std::string path = wstr2str(wpath);
+		return dirExist(path);
+	}
+	int makeDirs(std::wstring wpath){
 		/**
-		 * Ä‹A“I‚ÈƒfƒBƒŒƒNƒgƒŠ¶¬
-		 * –ß‚è’lF0=Šù‚ÉƒfƒBƒŒƒNƒgƒŠ‚ª‘¶İ, -1=¶¬¸”s
+		 * å†å¸°çš„ãªãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªç”Ÿæˆ
+		 * æˆ»ã‚Šå€¤ï¼š0=æ—¢ã«ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªãŒå­˜åœ¨, -1=ç”Ÿæˆå¤±æ•—
 		 */
+		std::string path = wstr2str(wpath);
 		LPTSTR lp = NULL;
 		char *fragment;
 		std::vector<std::string> words;
 		std::string tmp_dir;
 		int words_size;
 
-		if (dirExist(path)) {
-			std::cout << "DIR EXIST" << std::endl;//Šù‚É‚ ‚é
+		if (dirExist(wpath)) {
+			std::cout << "DIR EXIST" << std::endl;//æ—¢ã«ã‚ã‚‹
 			return 0;
 		}
 
 		if (CreateDirectory(path.c_str(), NULL)) {
-			std::cout << "CREATE DIR" << std::endl;//•’Ê‚Éì‚ê‚é
+			std::cout << "CREATE DIR" << std::endl;//æ™®é€šã«ä½œã‚Œã‚‹
 			return 1;
 		}
 
-		//Ä‹A“I‚ÈƒfƒBƒŒƒNƒgƒŠ¶¬
+		//å†å¸°çš„ãªãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªç”Ÿæˆ
 		fragment = strtok_s(const_cast<char*>(path.c_str()), "\\", &lp);
 		while(fragment!= NULL){
 			words.push_back(fragment);
@@ -477,42 +505,48 @@ public:
 				continue;
 			}
 			if (CreateDirectory(tmp_dir.c_str(), NULL) == 0) {
-				//‚½‚Ô‚ñƒhƒ‰ƒCƒu‚ª‘¶İ‚µ‚È‚¢‚Æ‚©‘‚«‚İ•s‰Â‚ÈêŠ‚Æ‚©
+				//ãŸã¶ã‚“ãƒ‰ãƒ©ã‚¤ãƒ–ãŒå­˜åœ¨ã—ãªã„ã¨ã‹æ›¸ãè¾¼ã¿ä¸å¯ãªå ´æ‰€ã¨ã‹
 				std::cout << "can't create dir : " << tmp_dir << std::endl;
 				return -1;
 			}
 			std::cout << tmp_dir << std::endl;
 		}
-
+		
 		return 1;
 	}
-	int fileExist(std::string path, std::string filename = "") {
+	int fileExist(std::string path, std::string filename) {
 		/**
-		 * w’è‚µ‚½ƒpƒX‚Éw’è‚µ‚½ƒtƒ@ƒCƒ‹‚ª‘¶İ‚·‚é‚©Šm”F
-		 * filename‚ğÈ—ª‚µ‚Äpath‚Éƒtƒ‹ƒpƒX‚ğ“n‚µ‚Ä‚àOK
+		 * æŒ‡å®šã—ãŸãƒ‘ã‚¹ã«æŒ‡å®šã—ãŸãƒ•ã‚¡ã‚¤ãƒ«ãŒå­˜åœ¨ã™ã‚‹ã‹ç¢ºèª
+		 * filenameã‚’çœç•¥ã—ã¦pathã«ãƒ•ãƒ«ãƒ‘ã‚¹ã‚’æ¸¡ã—ã¦ã‚‚OK
 		 */
 		if (filename != "") {
 			path += "\\" + filename;
 		}
 		return PathFileExists(path.c_str());
 	}
+	int fileExist(std::wstring wpath, std::wstring wfilename) {
+		//javascriptã‹ã‚‰ã®å‘¼ã³å‡ºã—ç”¨(æ—¥æœ¬èªå¯¾å¿œã®ç‚º)
+		std::string path = wstr2str(wpath);
+		std::string filename = wstr2str(wfilename);
+		return fileExist(path, filename);
+	}
 	std::string getNonFilename(std::string path, std::string filename){
 		/**
-		 * d•¡‚µ‚È‚¢(ã‘‚«‚É‚È‚ç‚È‚¢)ƒtƒ@ƒCƒ‹–¼‚ğ•Ô‚·
-		 * “¯–¼‚Ìƒtƒ@ƒCƒ‹‚ª‘¶İ‚·‚éê‡A––”ö‚É(”š)‚ğ•t‰Á‚·‚é
+		 * é‡è¤‡ã—ãªã„(ä¸Šæ›¸ãã«ãªã‚‰ãªã„)ãƒ•ã‚¡ã‚¤ãƒ«åã‚’è¿”ã™
+		 * åŒåã®ãƒ•ã‚¡ã‚¤ãƒ«ãŒå­˜åœ¨ã™ã‚‹å ´åˆã€æœ«å°¾ã«(æ•°å­—)ã‚’ä»˜åŠ ã™ã‚‹
 		 *   ex) filename(1).jpg
 		 */
 		std::vector<std::string> words;
 		std::string fname_name = "";
 		std::string fname_ext;
 		std::string fname_new;
-		char fname_add[5];//u(99)\0v‚Ì5•¶š(”š‚Í2Œ…‚Ü‚Å)
+		char fname_add[5];//ã€Œ(99)\0ã€ã®5æ–‡å­—(æ•°å­—ã¯2æ¡ã¾ã§)
 		int fname_num = 1;
 		int path_size = path.size();
 
-		//ƒtƒ@ƒCƒ‹‚ª‘¶İ‚µ‚È‚¯‚ê‚Î‚»‚Ì‚Ü‚Ü‚Ìƒtƒ@ƒCƒ‹–¼‚ğ•Ô‚·
+		//ãƒ•ã‚¡ã‚¤ãƒ«ãŒå­˜åœ¨ã—ãªã‘ã‚Œã°ãã®ã¾ã¾ã®ãƒ•ã‚¡ã‚¤ãƒ«åã‚’è¿”ã™
 		if (path.find_last_of("\\") != path_size || path.find_last_of("/") != path_size) {
-			//ƒpƒX‚Ì––”ö‚ªu\v–”‚Íu/v‚Å–³‚¢ê‡‚Í’Ç‰Á
+			//ãƒ‘ã‚¹ã®æœ«å°¾ãŒã€Œ\ã€åˆã¯ã€Œ/ã€ã§ç„¡ã„å ´åˆã¯è¿½åŠ 
 			path += "\\";
 		}
 		if(fileExist(path, filename) == 0){
@@ -520,44 +554,50 @@ public:
 			return filename;
 		}
 
-		//ƒtƒ@ƒCƒ‹–¼‚ÆŠg’£q‚ğ’²‚×‚é
+		//ãƒ•ã‚¡ã‚¤ãƒ«åã¨æ‹¡å¼µå­ã‚’èª¿ã¹ã‚‹
 		std::cout << filename << std::endl;
 		std::string::size_type n = filename.find_last_of(".");
 		if (n != std::string::npos) {
 			fname_name = filename.substr(0, n);
 			fname_ext = filename.substr(n + 1, filename.size() - (n) + 1);
 		} else {
-			std::cout << "Šg’£q‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ‚Å‚µ‚½" << std::endl;
+			std::cout << "æ‹¡å¼µå­ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã§ã—ãŸ" << std::endl;
 			return "";
 		}
 
 		while(1){
-			//ƒtƒ@ƒCƒ‹–¼‚ªd•¡‚µ‚Ä‚é‚Ì‚Å(1)‚Ì—l‚É––”ö‚É”š‚ğ•t‰Á
+			//ãƒ•ã‚¡ã‚¤ãƒ«åãŒé‡è¤‡ã—ã¦ã‚‹ã®ã§(1)ã®æ§˜ã«æœ«å°¾ã«æ•°å­—ã‚’ä»˜åŠ 
 			sprintf_s(fname_add, "(%d).", fname_num++);
 			fname_new = fname_name + fname_add + fname_ext;
 			if(fileExist(path, fname_new) == 0){
 				break;
 			}
 		}
-		return fname_new;//d•¡‚µ‚È‚¢ƒtƒ@ƒCƒ‹–¼‚ğ•Ô‚·
+		return fname_new;//é‡è¤‡ã—ãªã„ãƒ•ã‚¡ã‚¤ãƒ«åã‚’è¿”ã™
 	}
-	std::string getDesktop(){
+	std::wstring getNonFilename(std::wstring wpath, std::wstring wfilename){
+		//javascriptã‹ã‚‰ã®å‘¼ã³å‡ºã—ç”¨(æ—¥æœ¬èªå¯¾å¿œã®ç‚º)
+		std::string path = wstr2str(wpath);
+		std::string filename = wstr2str(wfilename);
+		return str2wstr(getNonFilename(path, filename));
+	}
+	std::wstring getDesktop(){
 		/**
-		 * ƒfƒXƒNƒgƒbƒvƒpƒX‚ğæ“¾
+		 * ãƒ‡ã‚¹ã‚¯ãƒˆãƒƒãƒ—ãƒ‘ã‚¹ã‚’å–å¾—
 		 */
 		std::string ret;
 		char Path[256];
 		SHGetSpecialFolderPath(NULL, Path, CSIDL_DESKTOP, FALSE);
-		ret = Path;//char*Œ^ ¨ stringŒ^ƒLƒƒƒXƒg
-		return ret;
+		ret = Path;//char*å‹ â†’ stringå‹ã‚­ãƒ£ã‚¹ãƒˆ
+		return str2wstr(ret);
 	}
 	int securityCheck(std::string _path){
 		/**
-			* ƒXƒ^[ƒgƒAƒbƒvƒtƒHƒ‹ƒ_‹y‚ÑƒpƒX‚Ì’Ê‚Á‚½ƒtƒHƒ‹ƒ_(ƒVƒXƒeƒ€ƒtƒHƒ‹ƒ_“™)‚É
-			* ƒ_ƒEƒ“ƒ[ƒho—ˆ‚È‚¢‚æ‚¤‚É‚µ‚ÄAƒZƒLƒ…ƒŠƒeƒB‚Ì‹­‰»‚ğ}‚é
-			* 
-			* –ß‚è’lF1 => ˆÀ‘S‚ÈƒpƒX, 0 => ŠëŒ¯‚ÈƒpƒX
-			*/
+		 * ã‚¹ã‚¿ãƒ¼ãƒˆã‚¢ãƒƒãƒ—ãƒ•ã‚©ãƒ«ãƒ€åŠã³ãƒ‘ã‚¹ã®é€šã£ãŸãƒ•ã‚©ãƒ«ãƒ€(ã‚·ã‚¹ãƒ†ãƒ ãƒ•ã‚©ãƒ«ãƒ€ç­‰)ã«
+		 * ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰å‡ºæ¥ãªã„ã‚ˆã†ã«ã—ã¦ã€ã‚»ã‚­ãƒ¥ãƒªãƒ†ã‚£ã®å¼·åŒ–ã‚’å›³ã‚‹
+		 * 
+		 * æˆ»ã‚Šå€¤ï¼š1 => å®‰å…¨ãªãƒ‘ã‚¹, 0 => å±é™ºãªãƒ‘ã‚¹
+		 */
 		char startup[MAX_PATH];
 		char *path = const_cast<char*>(_path.c_str());
 		char *p;
@@ -566,38 +606,38 @@ public:
 		char *fragment;
 		size_t requiredSize;
 
-		SHGetSpecialFolderPath( NULL, startup, CSIDL_STARTUP, FALSE );//ŒÂ•Êƒ†[ƒU[‚ÌƒXƒ^[ƒgƒAƒbƒv
+		SHGetSpecialFolderPath( NULL, startup, CSIDL_STARTUP, FALSE );//å€‹åˆ¥ãƒ¦ãƒ¼ã‚¶ãƒ¼ã®ã‚¹ã‚¿ãƒ¼ãƒˆã‚¢ãƒƒãƒ—
 		//std::cout << startup << std::endl;
 		p = strstr(path, startup);
 		if (NULL != p) {
 			std::cout << "Alert: startup directory" <<std::endl;
-			alertDialog("ƒXƒ^[ƒgƒAƒbƒvƒtƒHƒ‹ƒ_‚Éƒtƒ@ƒCƒ‹‚ğ•Û‘¶‚µ‚æ‚¤‚Æ‚µ‚Ü‚µ‚½B\nƒ_ƒEƒ“ƒ[ƒh‚ğ’†~‚µ‚Ü‚·B");
+			alertDialog("ã‚¹ã‚¿ãƒ¼ãƒˆã‚¢ãƒƒãƒ—ãƒ•ã‚©ãƒ«ãƒ€ã«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä¿å­˜ã—ã‚ˆã†ã¨ã—ã¾ã—ãŸã€‚\nãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã‚’ä¸­æ­¢ã—ã¾ã™ã€‚");
 			return 0;
 		}
 
-		SHGetSpecialFolderPath( NULL, startup, CSIDL_COMMON_STARTUP, FALSE );//‘S‚Ä‚Ìƒ†[ƒU[‚ÌƒXƒ^[ƒgƒAƒbƒv
+		SHGetSpecialFolderPath( NULL, startup, CSIDL_COMMON_STARTUP, FALSE );//å…¨ã¦ã®ãƒ¦ãƒ¼ã‚¶ãƒ¼ã®ã‚¹ã‚¿ãƒ¼ãƒˆã‚¢ãƒƒãƒ—
 		//std::cout << startup << std::endl;
 		p = strstr(path, startup);
 		if (NULL != p) {
 			std::cout << "Alert: startup directory(all users)" << std::endl;
-			alertDialog("ƒXƒ^[ƒgƒAƒbƒvƒtƒHƒ‹ƒ_(All Users)‚Éƒtƒ@ƒCƒ‹‚ğ•Û‘¶‚µ‚æ‚¤‚Æ‚µ‚Ü‚µ‚½B\nƒ_ƒEƒ“ƒ[ƒh‚ğ’†~‚µ‚Ü‚·B");
+			alertDialog("ã‚¹ã‚¿ãƒ¼ãƒˆã‚¢ãƒƒãƒ—ãƒ•ã‚©ãƒ«ãƒ€(All Users)ã«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä¿å­˜ã—ã‚ˆã†ã¨ã—ã¾ã—ãŸã€‚\nãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã‚’ä¸­æ­¢ã—ã¾ã™ã€‚");
 			return 0;
 		}
 
-		//ŠÂ‹«•Ï”PATH‚Ìæ“¾
+		//ç’°å¢ƒå¤‰æ•°PATHã®å–å¾—
 		getenv_s(&requiredSize, NULL, 0, "Path");
 		env = (char*) malloc(requiredSize * sizeof(char));
 		getenv_s(&requiredSize, env, requiredSize, "Path");
 
-		//ŠÂ‹«•Ï”PATH‚ÌƒfƒBƒŒƒNƒgƒŠ‚ğ‚P‚Â‚¸‚Â’²‚×‚é
+		//ç’°å¢ƒå¤‰æ•°PATHã®ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’ï¼‘ã¤ãšã¤èª¿ã¹ã‚‹
 		fragment = strtok_s(env, ";", &lptszNextToken);
 		while(fragment!= NULL){
 			//std::cout << fragment << std::endl;
 			p = strstr(path, fragment);
 			if (NULL != p) {
-				std::cout << "Alert : system environment variable uPATHv directory" << std::endl;
+				std::cout << "Alert : system environment variable ã€ŒPATHã€ directory" << std::endl;
 				std::string msg = fragment;
-				msg += "\n‚Éƒtƒ@ƒCƒ‹‚ğ•Û‘¶‚µ‚æ‚¤‚Æ‚µ‚Ü‚µ‚½B\nƒ_ƒEƒ“ƒ[ƒh‚ğ’†~‚µ‚Ü‚·B";
+				msg += "\nã«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä¿å­˜ã—ã‚ˆã†ã¨ã—ã¾ã—ãŸã€‚\nãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã‚’ä¸­æ­¢ã—ã¾ã™ã€‚";
 				alertDialog(msg);
 				free(env);
 				return 0;
@@ -607,23 +647,28 @@ public:
 		free(env);
 		return 1;
 	}
-	int openExplore(std::string path){
+	int securityCheck(std::wstring _wpath){
+		std::string _path = wstr2str(_wpath);
+		return securityCheck(_path);
+	}
+	int openExplorer(std::wstring wpath){
 		/**
-		 * ƒGƒNƒXƒvƒ[ƒ‰[‚Åw’è‚µ‚½ƒpƒX‚ğŠJ‚­
+		 * ã‚¨ã‚¯ã‚¹ãƒ—ãƒ­ãƒ¼ãƒ©ãƒ¼ã§æŒ‡å®šã—ãŸãƒ‘ã‚¹ã‚’é–‹ã
 		 */
-		//HINSTANCE n = ShellExecute(NULL, "explore", path.c_str(), NULL, NULL, SW_SHOWNORMAL);
+		std::string path = wstr2str(wpath);
+		HINSTANCE n = ShellExecute(NULL, "explore", path.c_str(), NULL, NULL, SW_SHOWNORMAL);
 		return 1;
 	}
 
-	//ƒtƒ@ƒCƒ‹‘€ìŠÖ˜A
-	//ƒZƒLƒ…ƒŠƒeƒB‘Îô
-	//ƒtƒ@ƒCƒ‹‚ÌíœEƒŠƒl[ƒ€‚Íjavascript‚©‚ç’¼ÚŒÄ‚Ño‚¹‚È‚¢‚æ‚¤‚É
-	//uComplex.idlvƒtƒ@ƒCƒ‹‚É‚Í‹Lq‚µ‚È‚¢
-	//(downloadingŠÖ”‚©‚çŒÄ‚Ño‚·‚Ì‚Åprivate‚É‚Í‚µ‚È‚¢)
+	//ãƒ•ã‚¡ã‚¤ãƒ«æ“ä½œé–¢é€£
+	//ã‚»ã‚­ãƒ¥ãƒªãƒ†ã‚£å¯¾ç­–
+	//ãƒ•ã‚¡ã‚¤ãƒ«ã®å‰Šé™¤ãƒ»ãƒªãƒãƒ¼ãƒ ã¯javascriptã‹ã‚‰ç›´æ¥å‘¼ã³å‡ºã›ãªã„ã‚ˆã†ã«
+	//ã€ŒComplex.idlã€ãƒ•ã‚¡ã‚¤ãƒ«ã«ã¯è¨˜è¿°ã—ãªã„
+	//(downloadingé–¢æ•°ã‹ã‚‰å‘¼ã³å‡ºã™ã®ã§privateã«ã¯ã—ãªã„)
 	static int deleteFile(std::string path, std::string filename = "") {
 		/**
-		 * ƒtƒ@ƒCƒ‹‚Ìíœ
-		 * filename‚ğÈ—ª‚µ‚Äpath‚Éƒtƒ‹ƒpƒX‚ğ“n‚µ‚Ä‚àOK
+		 * ãƒ•ã‚¡ã‚¤ãƒ«ã®å‰Šé™¤
+		 * filenameã‚’çœç•¥ã—ã¦pathã«ãƒ•ãƒ«ãƒ‘ã‚¹ã‚’æ¸¡ã—ã¦ã‚‚OK
 		 */
 		if (!filename.empty()) {
 			path += "\\" + filename;
@@ -632,23 +677,25 @@ public:
 	}
 	static int renameFile(std::string before, std::string after, std::string path=""){
 		/**
-		 * ƒtƒ@ƒCƒ‹‚ÌƒŠƒl[ƒ€
-		 * before:ƒŠƒl[ƒ€‘O‚Ìƒtƒ@ƒCƒ‹–¼, after:ƒŠƒl[ƒ€Œã‚Ìƒtƒ@ƒCƒ‹–¼, path:ƒtƒ@ƒCƒ‹‚Ì‚ ‚éêŠ
-		 * ‚Ü‚½Apath‚ğÈ—ª‚µ‚Äbefore, after‚Éƒtƒ‹ƒpƒX‚ğ“n‚µ‚Ä‚àOK
-		 * (‚»‚ÌÛbefore‚Æafter‚ÌƒfƒBƒŒƒNƒgƒŠ‚ªˆá‚¦‚Îƒtƒ@ƒCƒ‹‚ÌˆÚ“®‚às‚¤)
+		 * ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒªãƒãƒ¼ãƒ 
+		 * before:ãƒªãƒãƒ¼ãƒ å‰ã®ãƒ•ã‚¡ã‚¤ãƒ«å, after:ãƒªãƒãƒ¼ãƒ å¾Œã®ãƒ•ã‚¡ã‚¤ãƒ«å, path:ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚ã‚‹å ´æ‰€
+		 * ã¾ãŸã€pathã‚’çœç•¥ã—ã¦before, afterã«ãƒ•ãƒ«ãƒ‘ã‚¹ã‚’æ¸¡ã—ã¦ã‚‚OK
+		 * (ãã®éš›beforeã¨afterã®ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªãŒé•ãˆã°ãƒ•ã‚¡ã‚¤ãƒ«ã®ç§»å‹•ã‚‚è¡Œã†)
 		 */
 		if (!path.empty()) {
 			before = path + "\\" + before;
 			after  = path + "\\" + after;
 		}
 		if (rename(before.c_str(), after.c_str()) == 0) {
-			std::cout << before << "‚ğ" << after << "‚ÉƒŠƒl[ƒ€¬Œ÷" << std::endl;
+			std::cout << before << "ã‚’" << after << "ã«ãƒªãƒãƒ¼ãƒ æˆåŠŸ" << std::endl;
 			return 1;
 		} else {
-			std::cout << "ƒŠƒl[ƒ€¸”s" << std::endl;
+			std::cout << "ãƒªãƒãƒ¼ãƒ å¤±æ•—" << std::endl;
 			return 0;
 		}
 	}
+
+
 private:
 	int fileSize;
 	int nowSize;
@@ -659,13 +706,37 @@ private:
 	HANDLE h;
 	std::string error;
 
-	//ƒ_ƒEƒ“ƒ[ƒh‚ÌƒXƒŒƒbƒh
+	//std::wstring<=>std::stringå¤‰æ›
+	//æ—¥æœ¬èªã‚’javascriptã‹ã‚‰å—ã‘å–ã£ãŸã‚Šè¿”ã—ãŸã‚Šã™ã‚‹å ´åˆã¯std::stringã§ãªã„ã¨æ–‡å­—åŒ–ã‘ã™ã‚‹
+	static std::string wstr2str(std::wstring wstr){
+		std::string str;
+		size_t ret, len;
+		len = wstr.length() * MB_CUR_MAX + 1;
+		char *tmp = new char[len];
+		wcstombs_s(&ret, tmp, len, wstr.c_str(), len);
+		//wcstombs(tmp, wstr.c_str(), len);
+		str = tmp;
+		delete [] tmp;
+		return str;
+	}
+	static std::wstring str2wstr(std::string str){
+		std::wstring wstr;
+		size_t ret, len;
+		len = str.length()+1;
+		wchar_t *tmp = new wchar_t[len];
+		mbstowcs_s(&ret, tmp, len, str.c_str(), len);
+		//mbstowcs(tmp, str.c_str(), len);
+		wstr = tmp;
+		delete [] tmp;
+		return wstr;
+	}
+	//ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã®ã‚¹ãƒ¬ãƒƒãƒ‰
 	static void downloading(void* vp){
 		/**
-		 * ƒ_ƒEƒ“ƒ[ƒh(ƒ}ƒ‹ƒ`ƒXƒŒƒbƒh—p‚É•ª—£)
-		 *   javascript‚©‚çŒÄ‚Ño‚µ•s‰Â
+		 * ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰(ãƒãƒ«ãƒã‚¹ãƒ¬ãƒƒãƒ‰ç”¨ã«åˆ†é›¢)
+		 *   javascriptã‹ã‚‰å‘¼ã³å‡ºã—ä¸å¯
 		 */
-		//ƒpƒ‰ƒ[ƒ^‚©‚çî•ñ”²‚«o‚µ
+		//ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‹ã‚‰æƒ…å ±æŠœãå‡ºã—
 		param p = *((param*)vp);
 		Downloads *ins = p.ins;
 		char *domain = p.domain;
@@ -680,31 +751,31 @@ private:
 		char buf[BUF_SIZE];
 		unsigned int **addrptr;
 
-		if ( WSAStartup(MAKEWORD(2,0), &wd) ) {//winsock‰Šú‰»
-    		//‰Šú‰»¸”s
+		if ( WSAStartup(MAKEWORD(2,0), &wd) ) {//winsockåˆæœŸåŒ–
+    		//åˆæœŸåŒ–å¤±æ•—
     		std::cout << "WSAStartup failed\n" <<  std::endl;
 			ins->setERROR("WSAStartup failed");
     		return;
 		}
 
-		sock = socket(AF_INET, SOCK_STREAM, 0);//ƒ\ƒPƒbƒg‚Ìì¬
+		sock = socket(AF_INET, SOCK_STREAM, 0);//ã‚½ã‚±ãƒƒãƒˆã®ä½œæˆ
 		if (sock == INVALID_SOCKET) {
-    		//ì¬¸”s
+    		//ä½œæˆå¤±æ•—
     		std::cout << "socket : " << WSAGetLastError() << std::endl;
 			ins->setERROR("socketmake failed ");
 			WSACleanup();
     		return;
 		}
-		//Ú‘±æw’è—p\‘¢‘Ì‚Ì€”õ
-		server.sin_family = AF_INET;//ƒCƒ“ƒ^[ƒlƒbƒg(TCP, UDP, etc...)
-		server.sin_port = htons(port);//httpƒ|[ƒg80
-		server.sin_addr.S_un.S_addr = inet_addr(domain);//URLİ’è(inet_addr‚Í32bitƒoƒCƒiƒŠ‚Ö‚Ì•ÏŠ·)
+		//æ¥ç¶šå…ˆæŒ‡å®šç”¨æ§‹é€ ä½“ã®æº–å‚™
+		server.sin_family = AF_INET;//ã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒƒãƒˆ(TCP, UDP, etc...)
+		server.sin_port = htons(port);//httpãƒãƒ¼ãƒˆ80
+		server.sin_addr.S_un.S_addr = inet_addr(domain);//URLè¨­å®š(inet_addrã¯32bitãƒã‚¤ãƒŠãƒªã¸ã®å¤‰æ›)
 		if (server.sin_addr.S_un.S_addr == 0xffffffff) {
-    		//URL‚ªIP•\‹L‚¶‚á‚È‚¢ê‡(–¼‘O‰ğŒˆ‚ª•K—v‚Èê‡)
+    		//URLãŒIPè¡¨è¨˜ã˜ã‚ƒãªã„å ´åˆ(åå‰è§£æ±ºãŒå¿…è¦ãªå ´åˆ)
     		struct hostent *host;
-    		host = gethostbyname(domain);//–¼‘O‰ğŒˆ(¨IP)
+    		host = gethostbyname(domain);//åå‰è§£æ±º(â†’IP)
     		if (host == NULL) {
-    			//‰ğŒˆ¸”s
+    			//è§£æ±ºå¤±æ•—
     			if (WSAGetLastError() == WSAHOST_NOT_FOUND) {
     				std::cout << "host not found : " << domain << std::endl;
 					ins->setERROR("host not found");
@@ -718,15 +789,15 @@ private:
     		}
     		addrptr = (unsigned int **)host->h_addr_list;
     		while (*addrptr != NULL) {
-    			//1‚Â‚Ì–¼‘O‚É•¡”‚ÌIP‚ªŠÖ˜A•t‚¯‚ç‚ê‚Ä‚¢‚é‚±‚Æ‚ª‚ ‚é‚Ì‚ÅÚ‘±‚ª¬Œ÷‚·‚é‚Ü‚Å‘S‚Ä‚·
+    			//1ã¤ã®åå‰ã«è¤‡æ•°ã®IPãŒé–¢é€£ä»˜ã‘ã‚‰ã‚Œã¦ã„ã‚‹ã“ã¨ãŒã‚ã‚‹ã®ã§æ¥ç¶šãŒæˆåŠŸã™ã‚‹ã¾ã§å…¨ã¦è©¦ã™
     			server.sin_addr.S_un.S_addr = *(*addrptr);
     			if (connect(sock, (struct sockaddr *)&server, sizeof(server)) == 0) {
-    				break;//Ú‘±¬Œ÷
+    				break;//æ¥ç¶šæˆåŠŸ
     			}
     			addrptr++;
     		}
     		if (*addrptr == NULL) {
-    			//‘S‚Ä‚ÌIP‚ÅÚ‘±‚ª¸”s
+    			//å…¨ã¦ã®IPã§æ¥ç¶šãŒå¤±æ•—
     			std::cout << "connect : " << WSAGetLastError() << std::endl;
 				ins->setERROR("connect failed");
 				closesocket(sock);
@@ -736,15 +807,15 @@ private:
     		
 		}
 
-		//ƒT[ƒo[‚ÉÚ‘±
+		//ã‚µãƒ¼ãƒãƒ¼ã«æ¥ç¶š
 		connect(sock, (struct sockaddr *)&server, sizeof(server));
 
-		//HTTPƒŠƒNƒGƒXƒg‘—M
-		memset(buf, 0, sizeof(buf));//buf‰Šú‰»(ƒ[ƒƒNƒŠƒA)
+		//HTTPãƒªã‚¯ã‚¨ã‚¹ãƒˆé€ä¿¡
+		memset(buf, 0, sizeof(buf));//bufåˆæœŸåŒ–(ã‚¼ãƒ­ã‚¯ãƒªã‚¢)
 		sprintf_s(buf, sizeof(buf), "GET %s HTTP/1.1\r\n", rqpath);
 		int n = send(sock, buf, (int)strlen(buf), 0);
 		if (n < 0) {
-    		//‘—M¸”s
+    		//é€ä¿¡å¤±æ•—
     		std::cout << "send ; " << WSAGetLastError() << std::endl;
 			closesocket(sock);
 			WSACleanup();
@@ -761,7 +832,7 @@ private:
 			return;
 		}
 		if (!ins->getCookie().empty()) {
-			//ƒNƒbƒL[‚Ìİ’è
+			//ã‚¯ãƒƒã‚­ãƒ¼ã®è¨­å®š
 			std::string cookie = "Cookie: " + ins->getCookie() + "\r\n";
 			std::cout << cookie << std::endl;
 			sprintf_s(buf, sizeof(buf), cookie.c_str());
@@ -769,7 +840,7 @@ private:
 
 		}
 		if (!ins->getReferer().empty()) {
-			//ƒŠƒtƒ@ƒ‰‚Ìİ’è
+			//ãƒªãƒ•ã‚¡ãƒ©ã®è¨­å®š
 			std::string ref = "Referer: " + ins->getReferer() + "\r\n";
 			sprintf_s(buf, sizeof(buf), ref.c_str());
 			send(sock, buf, (int)strlen(buf), 0);
@@ -784,14 +855,14 @@ private:
     		return;
 		}
 
-		//ƒT[ƒo[‚©‚çƒf[ƒ^óM(ƒwƒbƒ_)
+		//ã‚µãƒ¼ãƒãƒ¼ã‹ã‚‰ãƒ‡ãƒ¼ã‚¿å—ä¿¡(ãƒ˜ãƒƒãƒ€)
 		std::string source = "";
 		while (1) {
-    		//c‚É1•¶š‚¸‚Âæ“¾‚µ‚Äsource‚É’Ç‹L‚µ‚Ä‰üs‚ª—ˆ‚½‚çsourceƒNƒŠƒA
+    		//cã«1æ–‡å­—ãšã¤å–å¾—ã—ã¦sourceã«è¿½è¨˜ã—ã¦æ”¹è¡ŒãŒæ¥ãŸã‚‰sourceã‚¯ãƒªã‚¢
     		char c;
     		n = recv(sock, &c, 1, 0);
     		if (n == SOCKET_ERROR) {
-    			//óM¸”s
+    			//å—ä¿¡å¤±æ•—
     			std::cout << "recv : " << WSAGetLastError() << std::endl;
 				closesocket(sock);
 				WSACleanup();
@@ -799,13 +870,13 @@ private:
     			return;
     		}
     		if (c == '\n'){
-    			//1s–ˆ‚Ìˆ—(source‚É1s‚Ìƒf[ƒ^‚ªŠi”[‚³‚ê‚Ä‚¢‚é)
+    			//1è¡Œæ¯ã®å‡¦ç†(sourceã«1è¡Œã®ãƒ‡ãƒ¼ã‚¿ãŒæ ¼ç´ã•ã‚Œã¦ã„ã‚‹)
     			if (source.size() < 2) {
-					//ƒwƒbƒ_‚ÆÀƒf[ƒ^‚ÌŠÔ‚Í‹ós
-					//‚Å‚àsource.empty()‚¶‚áƒ_ƒBƒTƒCƒY‚Í1(NULL•¶š'\0'‚ª“ü‚Á‚Ä‚é‚©‚çH)
-    				break;//ƒwƒbƒ_I—¹
+					//ãƒ˜ãƒƒãƒ€ã¨å®Ÿãƒ‡ãƒ¼ã‚¿ã®é–“ã¯ç©ºè¡Œ
+					//ã§ã‚‚source.empty()ã˜ã‚ƒãƒ€ãƒ¡ã€‚ã‚µã‚¤ã‚ºã¯1(NULLæ–‡å­—'\0'ãŒå…¥ã£ã¦ã‚‹ã‹ã‚‰ï¼Ÿ)
+    				break;//ãƒ˜ãƒƒãƒ€çµ‚äº†
     			}
-				//ƒXƒe[ƒ^ƒXæ“¾
+				//ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹å–å¾—
 				std::string::size_type k = source.find("HTTP/1.1 ");
 				if (k != std::string::npos) {
 					std::string status = source.substr(k + 9, source.size() - (k + 9));	
@@ -813,7 +884,7 @@ private:
 					if (_status != 200) {
 						//400 Bad Request
 						//403 Forbidden
-						//404 Not Found‚È‚Ç‚È‚Ç
+						//404 Not Foundãªã©ãªã©
 						std::cout << "Status: " << status << std::endl;
 						closesocket(sock);
 						WSACleanup();
@@ -821,7 +892,7 @@ private:
 						return;
 					}
 				}
-    			//ƒtƒ@ƒCƒ‹ƒTƒCƒYæ“¾
+    			//ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºå–å¾—
     			k = source.find("Content-Length: ");
 				if (k != std::string::npos) {
     				std::string _fsize = source.substr(k + 16);
@@ -830,19 +901,19 @@ private:
     			}
     			std::cout << source << std::endl;
     			std::cout << "------" << source.length() << "--------------" << std::endl;
-    			source = "";//Ÿ‚Ìs‚ğæ“¾‚·‚é‚½‚ß‚ÉƒNƒŠƒA
+    			source = "";//æ¬¡ã®è¡Œã‚’å–å¾—ã™ã‚‹ãŸã‚ã«ã‚¯ãƒªã‚¢
     			continue;
     		}
-    		source += c;//‰üs‚ª—ˆ‚é‚Ü‚Åsource‚É’~Ï
+    		source += c;//æ”¹è¡ŒãŒæ¥ã‚‹ã¾ã§sourceã«è“„ç©
 		}
 
-		//ƒT[ƒo[‚©‚çƒf[ƒ^óM(Àƒf[ƒ^)
+		//ã‚µãƒ¼ãƒãƒ¼ã‹ã‚‰ãƒ‡ãƒ¼ã‚¿å—ä¿¡(å®Ÿãƒ‡ãƒ¼ã‚¿)
 		std::ofstream f;
-		f.open(tmpfile, std::ios::out|std::ios::binary);//ƒ_ƒEƒ“ƒ[ƒh’†‚Í.download‚ğƒtƒ@ƒCƒ‹–¼––”ö‚É•t‰Á
-		//yƒƒ‚z
+		f.open(tmpfile, std::ios::out|std::ios::binary);//ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ä¸­ã¯.downloadã‚’ãƒ•ã‚¡ã‚¤ãƒ«åæœ«å°¾ã«ä»˜åŠ 
+		//ã€ãƒ¡ãƒ¢ã€‘
 		while (1) {
     		memset(buf, 0, sizeof(buf));
-    		n = recv(sock, buf, sizeof(buf) - 1, 0);//NULL‚ğŒã‚Å’Ç‰Á‚·‚é•ª1ƒoƒCƒg¬‚³‚­‚·‚é
+    		n = recv(sock, buf, sizeof(buf) - 1, 0);//NULLã‚’å¾Œã§è¿½åŠ ã™ã‚‹åˆ†1ãƒã‚¤ãƒˆå°ã•ãã™ã‚‹
 			std::cout << ".";
     		if (n < 0) {
     			std::cout << "recv : " << WSAGetLastError() << std::endl;
@@ -853,16 +924,16 @@ private:
 				ins->setERROR("recv failed");
     			return;
     		}  		
-			buf[n] = '\0';//NULL•¶š•t‰Á
+			buf[n] = '\0';//NULLæ–‡å­—ä»˜åŠ 
     		f.write(buf, n);
 			if (ins->getCancelFlag() == 1) {
-				std::cout << "ƒ†[ƒU[‚É‚æ‚èƒLƒƒƒ“ƒZƒ‹‚³‚ê‚Ü‚µ‚½" << std::endl;
+				std::cout << "ãƒ¦ãƒ¼ã‚¶ãƒ¼ã«ã‚ˆã‚Šã‚­ãƒ£ãƒ³ã‚»ãƒ«ã•ã‚Œã¾ã—ãŸ" << std::endl;
 				break;
 			}
 			ins->setNowSize(ins->getNowSize() + n);//nowSize += n;
 			if (n <= 0 || ins->getNowSize() >= ins->getFileSize()) {
-				//óMƒTƒCƒY‚ª0–”‚Í
-				//ƒ_ƒEƒ“ƒ[ƒhƒTƒCƒY‚ªƒtƒ@ƒCƒ‹ƒTƒCƒY‚É“’B‚µ‚½‚çI—¹
+				//å—ä¿¡ã‚µã‚¤ã‚ºãŒ0åˆã¯
+				//ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã‚µã‚¤ã‚ºãŒãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºã«åˆ°é”ã—ãŸã‚‰çµ‚äº†
 				std::cout << "\nn(<=0) : " << n << std::endl;
     			break;
     		}
@@ -870,23 +941,21 @@ private:
 		std::cout << "now size(end) : " << ins->getNowSize() << std::endl;
 		std::cout << "file size     : " << ins->getFileSize() << std::endl;
 		f.close();
-		closesocket(sock);//ƒ\ƒPƒbƒg‚ğ•Â‚¶‚é
-		WSACleanup();//winsockI—¹
+		closesocket(sock);//ã‚½ã‚±ãƒƒãƒˆã‚’é–‰ã˜ã‚‹
+		WSACleanup();//winsockçµ‚äº†
 		if (ins->getCancelFlag() == 1){
-			//ƒLƒƒƒ“ƒZƒ‹
+			//ã‚­ãƒ£ãƒ³ã‚»ãƒ«æ™‚
 			ins->deleteFile(tmpfile, "");
 			ins->setERROR("cancel");
 			return;
 		}
- 		//ƒ_ƒEƒ“ƒ[ƒhŠ®—¹
+ 		//ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰å®Œäº†
 		ins->setNowPer(2.0);
 		if(ins->fileExist(fullpath, "")) {
-			//ã‘‚«‚·‚é‚È‚çƒtƒ@ƒCƒ‹íœ‚µ‚Æ‚©‚È‚¢‚ÆƒŠƒl[ƒ€¸”s‚·‚é
+			//ä¸Šæ›¸ãã™ã‚‹ãªã‚‰ãƒ•ã‚¡ã‚¤ãƒ«å‰Šé™¤ã—ã¨ã‹ãªã„ã¨ãƒªãƒãƒ¼ãƒ å¤±æ•—ã™ã‚‹
 			ins->deleteFile(fullpath, "");
 		}
-		ins->renameFile(tmpfile, fullpath, "");//u.downloadvœ‹
+		ins->renameFile(tmpfile, fullpath, "");//ã€Œ.downloadã€é™¤å»
 		return;
 	}
 };
-
-

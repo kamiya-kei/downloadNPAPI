@@ -1,4 +1,4 @@
-LIBRARY   npdownloads
+﻿LIBRARY   npdownloads
 
 EXPORTS
   NP_GetEntryPoints   @1

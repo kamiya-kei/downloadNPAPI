@@ -2,7 +2,7 @@
 class Downloads {
   Downloads();
   std::string post(std::string url, std::string postmsg);
-  void download(std::string url, std::string path, std::string filename, int ask);
+  void download(std::string url, std::wstring wpath, std::wstring wfilename, int ask);
   int getFileSize();
   int getNowSize();
   float getNowPer();
@@ -19,14 +19,14 @@ class Downloads {
   void setCookie(std::string value);
   void setReferer(std::string value);
   void setERROR(std::string value);
-  std::string selectDirDialog();
-  std::string saveFileDialog(std::string path, std::string filename);
-  int alertDialog(std::string msg);
-  int askDialog(std::string msg, std::string title, int flag);
-  int dirExist(std::string path);
-  int makeDirs(std::string path);
-  std::string getNonFilename(std::string path, std::string filename);
-  std::string getDesktop();
-  int securityCheck(std::string _path);
-  int openExplore(std::string path);
+  std::wstring selectDirDialog();
+  std::wstring saveFileDialog(std::wstring wpath, std::wstring wfilename);
+  int alertDialog(std::wstring wmsg);
+  int askDialog(std::wstring wmsg, std::wstring wtitle, int flag);
+  int dirExist(std::wstring wpath);
+  int makeDirs(std::wstring wpath);
+  std::wstring getNonFilename(std::wstring wpath, std::wstring wfilename);
+  std::wstring getDesktop();
+  int securityCheck(std::wstring _path);
+  int openExplorer(std::wstring wpath);
 };

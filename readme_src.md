@@ -30,9 +30,9 @@ pywin32モジュールを使うので以下から「 **pywin32-216.win32-py2.6.exe** 」をダウン
 ●ソースコードのダウンロード
 ----------------------------
 downloads_srcをダウンロードして下さい。  
-このGitHubページのZIPのとこからダウンロード出来たと思います。  
+このGitHubページの上の方のZIPのとこからダウンロード出来ます。  
 
-Google Driveからでもダウンロードできます。  
+Google Driveからでもダウンロードできます。(旧バージョン)  
 [https://docs.google.com/folder/d/0BxMqBbrrBxIDcVV6Q2h2SzJrQlk/edit?usp=sharing&pli=1](https://docs.google.com/folder/d/0BxMqBbrrBxIDcVV6Q2h2SzJrQlk/edit?usp=sharing&pli=1)  
 
 「 **downloads_src.zip** 」と「 **downloads_src_without_nixysa.zip** 」  
