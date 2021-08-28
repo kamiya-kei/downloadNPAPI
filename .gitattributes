@@ -20,3 +20,8 @@
 *.PDF	 diff=astextplain
 *.rtf	 diff=astextplain
 *.RTF	 diff=astextplain
+
+# for linguist
+downloads_src/nixysa/* linguist-vendored
+downloads_src/third_party/* linguist-vendored
+downloads_src/tools/* linguist-vendored
